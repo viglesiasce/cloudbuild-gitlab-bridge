@@ -1,0 +1,12 @@
+[[runners]]
+  name = "cloudbuild"
+  url = "URL"
+  token = "TOKEN"
+  executor = "custom"
+  builds_dir = "/builds"
+  cache_dir = "/cache"
+  [runners.custom]
+    prepare_exec = "/prepare.sh" # Path to a bash script to create lxd container and download dependencies.
+    config_exec = "/config.sh"
+    run_exec = "/run.sh" # Path to a bash script to run script inside the container.
+    cleanup_exec = "/cleanup.sh" # Path to bash script to delete container.

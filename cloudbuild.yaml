@@ -1,0 +1,17 @@
+steps:
+  - name: "${_IMAGE_NAME}"
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        # Create workspace dir used by gitlab-runner
+        mkdir -p /builds/${_CI_PROJECT_NAMESPACE}
+        ln -s /workspace /builds/${_CI_PROJECT_NAMESPACE}/${_CI_PROJECT_NAME}
+        cd /builds/${_CI_PROJECT_NAMESPACE}/${_CI_PROJECT_NAME}
+        ./script.sh
+        tar zcf /workspace.tgz -C /workspace/ *
+        mv /workspace.tgz /workspace
+artifacts:
+  objects:
+    location: gs://${PROJECT_ID}-gitlab-cache/${_CI_BUILD_REF}/
+    paths: ["workspace.tgz"]
