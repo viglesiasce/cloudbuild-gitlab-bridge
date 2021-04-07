@@ -32,7 +32,7 @@ The main component is a virtual machine, the bridge, which runs [a Custom execut
     mkdir etc
     export REGISTRATION_TOKEN=<SET_YOUR_TOKEN_HERE>
     export GITLAB_URL=https://gitlab.com
-    docker run --rm -it -v `pwd`/etc:/etc/gitlab-runner gitlab/gitlab-runner register -n -r ${REGISTRATION_TOKEN} -u ${GITLAB_URL} --run-untagged --executor custom
+    docker run --rm -it -v `pwd`/etc:/etc/gitlab-runner gitlab/gitlab-runner register -n -r ${REGISTRATION_TOKEN} -u ${GITLAB_URL} --tag-list cloudbuild --executor custom
     ```
 
 1. Setup IAM for the bridge VM
@@ -73,4 +73,15 @@ The main component is a virtual machine, the bridge, which runs [a Custom execut
                     --container-image=gcr.io/$PROJECT/gitlab-runner-cloudbuild \
                     --container-restart-policy=always \
                     --boot-disk-size=200GB
+    ```
+
+1. Ensure your `.gitlab-ci.yml` sets the builds tag to `cloudbuild`. For example:
+
+    ```yaml
+    build:
+      tags:
+      - cloudbuild
+      stage: build
+      script:
+      - echo "This will run in Cloud Build"
     ```
